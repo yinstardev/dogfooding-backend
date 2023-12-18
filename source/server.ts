@@ -118,4 +118,4 @@ app.use((req, res, next) => {
 
 httpServer.listen(config.server.port, () => logging.info(`Server is running on port ${config.server.port}`));
 
-module.exports = app;
+export default app;
