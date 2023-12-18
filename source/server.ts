@@ -50,62 +50,62 @@ app.get('/',(req,res) => {
 })
 
 /** Passport & SAML Routes */
-app.get('/login', passport.authenticate('saml', config.saml.options), (req, res, next) => {
-    return res.redirect('http://localhost:3000');
-});
+// app.get('/login', passport.authenticate('saml', config.saml.options), (req, res, next) => {
+//     return res.redirect('http://localhost:3000');
+// });
 
-app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req, res, next) => {
-    return res.redirect('http://localhost:3000');
-});
+// app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req, res, next) => {
+//     return res.redirect('http://localhost:3000');
+// });
 
-app.get('/whoami', (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        logging.info('User not authenticated');
+// app.get('/whoami', (req, res, next) => {
+//     if (!req.isAuthenticated()) {
+//         logging.info('User not authenticated');
 
-        return res.status(401).json({
-            message: 'Unauthorized'
-        });
-    } else {
-        logging.info('User authenticated');
-        logging.info(req.user);
-
-
-        return res.status(200).json({ user: req.user });
-    }
-});
-
-app.get('/healthcheck', (req, res, next) => {
-    return res.status(200).json({ messgae: 'Server is running!' });
-});
-
-app.post('/getAuthToken', async (req, res) => {
-    try {
-        const postData = `secret_key=${process.env.SECRET_KEY}&username=${process.env.EMAIL}.com&access_level=FULL`;
-        const response = await axios.post(`${process.env.BASE_URL}`, postData, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Accept': 'text/plain'
-            }
-        });
-
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching auth token:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
-});
+//         return res.status(401).json({
+//             message: 'Unauthorized'
+//         });
+//     } else {
+//         logging.info('User authenticated');
+//         logging.info(req.user);
 
 
-// import loginRoute from './api/login';
-// import loginCallbackRoute from './api/loginCallback';
-// import whoamiRoute from './api/whoami';
-// import healthcheckRoute from './api/healthCheck';
+//         return res.status(200).json({ user: req.user });
+//     }
+// });
 
-// // Use the routes
-// app.use(loginRoute);
-// app.use(loginCallbackRoute);
-// app.use(whoamiRoute);
-// app.use(healthcheckRoute);
+// app.get('/healthcheck', (req, res, next) => {
+//     return res.status(200).json({ messgae: 'Server is running!' });
+// });
+
+// app.post('/getAuthToken', async (req, res) => {
+//     try {
+//         const postData = `secret_key=${process.env.SECRET_KEY}&username=${process.env.EMAIL}.com&access_level=FULL`;
+//         const response = await axios.post(`${process.env.BASE_URL}`, postData, {
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//                 'Accept': 'text/plain'
+//             }
+//         });
+
+//         res.json(response.data);
+//     } catch (error) {
+//         console.error('Error fetching auth token:', error);
+//         res.status(500).json({ message: 'Internal Server Error' });
+//     }
+// });
+
+
+import loginRoute from './api/login';
+import loginCallbackRoute from './api/loginCallback';
+import whoamiRoute from './api/whoami';
+import healthcheckRoute from './api/healthCheck';
+
+// Use the routes
+app.use(loginRoute);
+app.use(loginCallbackRoute);
+app.use(whoamiRoute);
+app.use(healthcheckRoute);
 
 
 app.use((req, res, next) => {
