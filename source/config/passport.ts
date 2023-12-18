@@ -1,8 +1,13 @@
 import fs from 'fs';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import { Strategy } from 'passport-saml';
 import config from './config';
 import logging from './logging';
+
+
+
+const jwt_secret = process.env.JWT_SECRET || '';
 
 const savedUsers: Express.User[] = [];
 
@@ -30,6 +35,13 @@ passport.use(
             if (!savedUsers.includes(expressUser)) {
                 savedUsers.push(expressUser);
             }
+            const jwtToken = jwt.sign(
+                { username: expressUser.nameID },
+                jwt_secret,
+                { expiresIn: '24h' }
+            );
+
+            expressUser.jwtToken = jwtToken;
 
             return done(null, expressUser);
         }
