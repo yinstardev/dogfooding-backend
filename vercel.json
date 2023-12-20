@@ -14,7 +14,6 @@
         { "src": "/api/healthcheck", "dest": "/api/healthCheck.ts" },
         { "src": "/api/getAuthToken", "dest": "/api/getAuthToken.ts" },
         { "src": "/api/getColumnsData", "dest": "/api/getColumnsData.ts" },
-        { "src": "/api/validateToken", "dest": "/api/validateToken.ts" },
-        { "src": "/api/getColumnHelper", "dest": "/api/GetColumnHelper.ts" }
+        { "src": "/api/validateToken", "dest": "/api/validateToken.ts" }
     ]
 }
