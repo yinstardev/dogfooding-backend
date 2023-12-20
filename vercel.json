@@ -2,15 +2,15 @@
     "version": 2,
     "builds": [
         {
-            "src": "source/api/**/*.ts",
+            "src": "api/**/*.ts",
             "use": "@vercel/node",
             "config": { "includeFiles": ["source/config/**"] }
         }
     ],
     "routes": [
-        { "src": "/api/login", "dest": "/source/api/login.ts" },
-        { "src": "/api/login/callback", "dest": "/source/api/loginCallback.ts" },
-        { "src": "/api/whoami", "dest": "/source/api/whoami.ts" },
-        { "src": "/api/healthcheck", "dest": "/source/api/healthCheck.ts" }
+        { "src": "/api/login", "dest": "/api/login.ts" },
+        { "src": "/api/login/callback", "dest": "/api/loginCallback.ts" },
+        { "src": "/api/whoami", "dest": "/api/whoami.ts" },
+        { "src": "/api/healthcheck", "dest": "/api/healthCheck.ts" }
     ]
 }
