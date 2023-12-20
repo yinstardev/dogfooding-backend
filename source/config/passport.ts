@@ -38,7 +38,7 @@ passport.use(
             const jwtToken = jwt.sign(
                 { username: expressUser.nameID },
                 jwt_secret,
-                { expiresIn: '24h' }
+                { expiresIn: '1h' }
             );
 
             expressUser.jwtToken = jwtToken;

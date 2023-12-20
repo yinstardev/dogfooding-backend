@@ -71,10 +71,11 @@ app.get('/login', passport.authenticate('saml', config.saml.options), (req, res)
 // });
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-    // if(req.isAuthenticated()){
-        res.redirect(`http://localhost:3000/token-handler?token=${req.user.jwtToken}`)
+    // if (req.user && req.user.jwtToken) {
+        res.redirect(`http://localhost:3000/token-handler?token=${req.user.jwtToken}`);
+    // } else {
+    //     res.redirect('/login-failure');
     // }
-    // return res.redirect('http://localhost:3000');
 });
 
 
@@ -89,7 +90,7 @@ app.get('/healthcheck', (req, res, next) => {
     return res.status(200).json({ messgae: 'Server is runngggging!' });
 });
 
-app.post('/getauthtoken', async (req, res:any) => {
+app.post('/getauthtoken',async (req, res:any) => {
 
         const postData = `secret_key=${process.env.SECRET_KEY}&username=${process.env.EMAIL}.com&access_level=FULL`;
         const response = await axios.post(`${process.env.BASE_URL}`, postData, {
@@ -103,7 +104,7 @@ app.post('/getauthtoken', async (req, res:any) => {
 
 });
 
-app.get('/checkbhai', validateToken,async(req,res) => {
+app.post('/checkbhai',async(req,res) => {
     console.log("ye to bekar hai");
     
     res.status(200).json({"bhai":"kaisa hai"})
@@ -129,7 +130,7 @@ app.get('/validate-token', (req, res) => {
 });
 
 
-import getColumnsData from './api/getColumnsData'
+import getColumnsData from '../api/getColumnsData'
 
 app.use(getColumnsData);
 
