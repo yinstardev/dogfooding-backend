@@ -1,6 +1,6 @@
 import express from 'express';
 import passport from 'passport';
-import logging from '../config/logging';
+import logging from '../source/config/logging';
 
 const app = express();
 app.use(passport.initialize());

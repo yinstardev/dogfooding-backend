@@ -7,6 +7,7 @@ import config from './config/config';
 import axios from 'axios';
 import './config/passport';
 import jwt from 'jsonwebtoken';
+import { validateToken } from './middleware/validateToken';
 
 require('dotenv').config();
 
@@ -34,7 +35,6 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.header('origin'));
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
-
     if (req.method == 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
@@ -50,40 +50,48 @@ app.get('/',(req,res) => {
     })
 })
 
-/** Passport & SAML Routes */
-app.get('/login', passport.authenticate('saml', config.saml.options), (req, res, next) => {
+
+app.get('/login', passport.authenticate('saml', config.saml.options), (req, res) => {
     return res.redirect('http://localhost:3000');
 });
+
+// app.post('/login/callback', (req, res, next) => {
+//     passport.authenticate('saml', config.saml.options, (err: any, user: any, info: any) => {
+//         if (err) {
+//             return next(err); // Handle authentication error
+//         }
+//         if (!user) {
+//             return res.redirect('/login-failure'); // Handle failed authentication
+//         }
+
+//         // User is authenticated, use the JWT token generated in the Passport strategy
+//         const jwtToken = user.jwtToken;
+//         res.redirect(`http://localhost:3000/token-handler?token=${jwtToken}`);
+//     })(req, res, next);
+// });
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-    if(req.isAuthenticated()){
-        res.redirect(`http://localhost:3000/token-handler?token=${req.user.jwtToken}`)
-    }
-    return res.redirect('http://localhost:3000');
+    // if (req.user && req.user.jwtToken) {
+        res.redirect(`http://localhost:3000/token-handler?token=${req.user.jwtToken}`);
+    // } else {
+    //     res.redirect('/login-failure');
+    // }
 });
 
+
+
 app.get('/whoami', (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        logging.info('User not authenticated');
-
-        return res.status(401).json({
-            message: 'Unauthorized'
-        });
-    } else {
-        logging.info('User authenticated');
-        logging.info(req.user);
-
-
-        return res.status(200).json({ user: req.user });
-    }
+    logging.info('User authenticated');
+    logging.info(req.user);
+    return res.status(200).json({ user: req.user });
 });
 
 app.get('/healthcheck', (req, res, next) => {
-    return res.status(200).json({ messgae: 'Server is running!' });
+    return res.status(200).json({ messgae: 'Server is runngggging!' });
 });
 
-app.post('/getauthtoken', async (req, res) => {
-    try {
+app.post('/getauthtoken',async (req, res:any) => {
+
         const postData = `secret_key=${process.env.SECRET_KEY}&username=${process.env.EMAIL}.com&access_level=FULL`;
         const response = await axios.post(`${process.env.BASE_URL}`, postData, {
             headers: {
@@ -92,12 +100,15 @@ app.post('/getauthtoken', async (req, res) => {
             }
         });
 
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching auth token:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    }
+        res.status(200).json(response.data);
+
 });
+
+app.post('/checkbhai',async(req,res) => {
+    console.log("ye to bekar hai");
+    
+    res.status(200).json({"bhai":"kaisa hai"})
+})
 
 
 const jwt_secret = process.env.JWT_SECRET || '';
@@ -118,19 +129,12 @@ app.get('/validate-token', (req, res) => {
     });
 });
 
-// import loginRoute from './api/login';
-// import loginCallbackRoute from './api/loginCallback';
-// import whoamiRoute from './api/whoami';
-// import healthcheckRoute from './api/healthCheck';
-import getColumnsData from './api/getColumnsData'
+
+import getColumnsData from '../api/getColumnsData'
 
 app.use(getColumnsData);
 
-// // Use the routes
-// app.use(loginRoute);
-// app.use(loginCallbackRoute);
-// app.use(whoamiRoute);
-// app.use(healthcheckRoute);
+
 
 
 app.use((req, res, next) => {

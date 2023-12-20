@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import config from '../config/config';
-import '../config/passport';
+import config from '../source/config/config';
+import '../source/config/passport';
 
 const app = express();
 app.use(passport.initialize());
