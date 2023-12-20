@@ -2,12 +2,12 @@ import http from 'http';
 import express from 'express';
 import session from 'express-session';
 import passport from 'passport';
-import logging from './config/logging';
-import config from './config/config';
+import logging from './source/config/logging';
+import config from './source/config/config';
 import axios from 'axios';
-import './config/passport';
+import './source/config/passport';
 import jwt from 'jsonwebtoken';
-import { validateToken } from './middleware/validateToken';
+import { validateToken } from './source/middleware/validateToken';
 
 require('dotenv').config();
 
@@ -128,12 +128,6 @@ app.get('/validate-token', (req, res) => {
         res.json({ valid: true, user: decoded });
     });
 });
-
-
-import getColumnsData from '../api/getColumnsData'
-
-app.use(getColumnsData);
-
 
 
 
