@@ -29,7 +29,7 @@ console.log(`SAML certificate written to ${tempCertPath}`);
 
 const config = {
     saml: {
-        cert: tempCertPath,
+        cert: './source/config/saml.pem',
         entryPoint: getEnvVariable('ENTRY_POINT'),
         issuer: 'http://localhost:1337',
         options: {
