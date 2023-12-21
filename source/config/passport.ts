@@ -1,4 +1,3 @@
-import fs from 'fs';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { Strategy } from 'passport-saml';
@@ -26,10 +25,10 @@ passport.use(
     new Strategy(
         {
             issuer: config.saml.issuer,
-            protocol: 'http://',
+            protocol: 'https://',
             path: '/login/callback',
             entryPoint: config.saml.entryPoint,
-            cert: fs.readFileSync(config.saml.cert, 'utf-8')
+            cert: config.saml.cert
         },
         (expressUser: any, done: any) => {
             if (!savedUsers.includes(expressUser)) {

@@ -1,7 +1,4 @@
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
 
 dotenv.config();
 
@@ -13,6 +10,7 @@ function getEnvVariable(key: string): string {
     return value;
 }
 
+const idp_issuer = getEnvVariable('ID_ISSUER');
 
 const base64EncodedCert = getEnvVariable('SAML_CERT');
 if (!base64EncodedCert) {
@@ -26,7 +24,7 @@ const config = {
     saml: {
         cert: certContent,
         entryPoint: getEnvVariable('ENTRY_POINT'),
-        issuer: 'http://www.okta.com/exke1hd7ea0LS78WY5d7',
+        issuer: idp_issuer,
         options: {
             failureRedirect: '/login',
             failureFlash: true
