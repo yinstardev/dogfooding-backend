@@ -14,6 +14,7 @@ require('dotenv').config();
 const app = express();
 
 const httpServer = http.createServer(app);
+const fe_url = process.env.FE_URL || "";
 
 app.use((req, res, next) => {
     logging.info(`METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
@@ -52,36 +53,16 @@ app.get('/',(req,res) => {
 
 
 app.get('/login', passport.authenticate('saml', config.saml.options), (req, res) => {
-    return res.redirect('http://localhost:3000');
+    return res.redirect(`${fe_url}/dashboard`);
 });
-
-// app.post('/login/callback', (req, res, next) => {
-//     passport.authenticate('saml', config.saml.options, (err: any, user: any, info: any) => {
-//         if (err) {
-//             return next(err); // Handle authentication error
-//         }
-//         if (!user) {
-//             return res.redirect('/login-failure'); // Handle failed authentication
-//         }
-
-//         // User is authenticated, use the JWT token generated in the Passport strategy
-//         const jwtToken = user.jwtToken;
-//         res.redirect(`http://localhost:3000/token-handler?token=${jwtToken}`);
-//     })(req, res, next);
-// });
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-    // if (req.user && req.user.jwtToken) {
-        res.redirect(`http://localhost:3000/token-handler?token=${req.user.jwtToken}`);
-    // } else {
-    //     res.redirect('/login-failure');
-    // }
+    if (req.user && req.user.jwtToken) {
+        res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
+    }
 });
 
-
-
 app.get('/whoami', (req, res, next) => {
-    logging.info('User authenticated');
     logging.info(req.user);
     return res.status(200).json({ user: req.user });
 });
@@ -110,7 +91,6 @@ app.post('/checkbhai',async(req,res) => {
     res.status(200).json({"bhai":"kaisa hai"})
 })
 
-
 const jwt_secret = process.env.JWT_SECRET || '';
 
 app.get('/validate-token', (req, res) => {
@@ -128,8 +108,6 @@ app.get('/validate-token', (req, res) => {
         res.json({ valid: true, user: decoded });
     });
 });
-
-
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
