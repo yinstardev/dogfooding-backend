@@ -30,6 +30,9 @@ const config = {
             failureFlash: true
         }
     },
+    server: {
+        port: 1337
+    },
     session: {
         resave: false,
         secret: getEnvVariable('SECRET'),
