@@ -20,18 +20,13 @@ if (!base64EncodedCert) {
 }
 
 const certContent = Buffer.from(base64EncodedCert, 'base64').toString('utf-8');
-const tempDir = os.tmpdir();
-const tempCertPath = path.join(tempDir, 'saml.pem');
-
-fs.writeFileSync(tempCertPath, certContent);
-console.log(`SAML certificate written to ${tempCertPath}`);
 
 
 const config = {
     saml: {
-        cert: './source/config/saml.pem',
+        cert: certContent,
         entryPoint: getEnvVariable('ENTRY_POINT'),
-        issuer: 'http://localhost:1337',
+        issuer: 'http://www.okta.com/exke1hd7ea0LS78WY5d7',
         options: {
             failureRedirect: '/login',
             failureFlash: true
