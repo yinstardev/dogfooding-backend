@@ -70,6 +70,8 @@ app.get('/login/callback', (req, res) => {
                         SAMLResponse: samlResponse
                         // Add other data if needed
                     };
+                    console.log(data);
+                    console.log(JSON.strigify(data));
 
                     fetch('/login/callback', {
                         method: 'POST',
