@@ -103,7 +103,6 @@ app.get('/login', passport.authenticate('saml', config.saml.options), (req, res)
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
     // if (req.user && req.user.jwtToken) {
-        console.log("user info", req.user);
         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
 
     // }else{
@@ -112,7 +111,7 @@ app.post('/login/callback', passport.authenticate('saml', config.saml.options), 
 });
 
 app.get('/whoami', (req, res, next) => {
-    logging.info(req.user);
+    logging.info(req.user, "user info");
     return res.status(200).json({ user: req.user });
 });
 
