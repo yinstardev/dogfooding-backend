@@ -8,18 +8,18 @@ import logging from './logging';
 
 const jwt_secret = process.env.JWT_SECRET || '';
 
-const savedUsers: Express.User[] = [];
+// const savedUsers: Express.User[] = [];
 
-passport.serializeUser<Express.User>((expressUser, done) => {
-    logging.info(expressUser, 'Serialize User');
-    done(null, expressUser);
-});
+// passport.serializeUser<Express.User>((expressUser, done) => {
+//     logging.info(expressUser, 'Serialize User');
+//     done(null, expressUser);
+// });
 
-passport.deserializeUser<Express.User>((expressUser, done) => {
-    logging.info(expressUser, 'Deserialize User');
+// passport.deserializeUser<Express.User>((expressUser, done) => {
+//     logging.info(expressUser, 'Deserialize User');
 
-    done(null, expressUser);
-});
+//     done(null, expressUser);
+// });
 
 passport.use(
     new Strategy(
@@ -31,9 +31,9 @@ passport.use(
             cert: config.saml.cert
         },
         (expressUser: any, done: any) => {
-            if (!savedUsers.includes(expressUser)) {
-                savedUsers.push(expressUser);
-            }
+            // if (!savedUsers.includes(expressUser)) {
+            //     savedUsers.push(expressUser);
+            // }
             const jwtToken = jwt.sign(
                 { username: expressUser.nameID },
                 jwt_secret,

@@ -26,9 +26,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(session(config.session));
+// app.use(session(config.session));
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
