@@ -101,14 +101,28 @@ app.get('/login', passport.authenticate('saml', config.saml.options), (req, res)
 // });
 
 
-app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-    // if (req.user && req.user.jwtToken) {
-        res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
+// app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
+//     // if (req.user && req.user.jwtToken) {
+//         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
 
-    // }else{
-    //     res.json({"Hi THere : something went wrong": "Check routes"})
-    // }
-});
+//     // }else{
+//     //     res.json({"Hi THere : something went wrong": "Check routes"})
+//     // }
+// });
+app.post('/login/callback', 
+    passport.authenticate('saml', { session: false }), 
+    (req: any, res) => {
+        // Create and handle JWT token
+        const jwtToken = jwt.sign(
+            { username: req.user.nameID },
+            jwt_secret,
+            { expiresIn: '23h' }
+        );
+
+        // Send the JWT token to the client
+        res.redirect(`${fe_url}/token-handler?token=${jwtToken}`);
+    }
+);
 
 app.get('/whoami', (req, res, next) => {
     logging.info(req.user, "user info");

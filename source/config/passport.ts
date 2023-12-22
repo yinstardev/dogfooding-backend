@@ -33,14 +33,14 @@ passport.use(
         (expressUser: any, done: any) => {
             // if (!savedUsers.includes(expressUser)) {
             //     savedUsers.push(expressUser);
-            // }
-            const jwtToken = jwt.sign(
-                { username: expressUser.nameID },
-                jwt_secret,
-                { expiresIn: '23h' }
-            );
+            // // }
+            // const jwtToken = jwt.sign(
+            //     { username: expressUser.nameID },
+            //     jwt_secret,
+            //     { expiresIn: '23h' }
+            // );
 
-            expressUser.jwtToken = jwtToken;
+            // expressUser.jwtToken = jwtToken;
 
             return done(null, expressUser);
         }
