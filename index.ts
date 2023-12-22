@@ -71,7 +71,6 @@ app.get('/login/callback', (req, res) => {
                         // Add other data if needed
                     };
                     console.log(data);
-                    console.log(JSON.strigify(data));
 
                     fetch('/login/callback', {
                         method: 'POST',
