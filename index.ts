@@ -103,7 +103,9 @@ app.get('/login', passport.authenticate('saml', config.saml.options), (req, res)
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
     // if (req.user && req.user.jwtToken) {
+        console.log("user info", req.user);
         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
+
     // }else{
     //     res.json({"Hi THere : something went wrong": "Check routes"})
     // }
