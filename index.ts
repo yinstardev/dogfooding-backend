@@ -55,24 +55,29 @@ app.get('/',(req,res) => {
 app.get('/login', passport.authenticate('saml', config.saml.options), (req, res) => {
     return res.redirect(`${fe_url}/dashboard`);
 });
-
 app.get('/login/callback', (req, res) => {
+    // Extract the SAMLResponse query parameter
+    const samlResponse = req.query.SAMLResponse; // Adjust according to what data you expect
+
     res.send(`
         <html>
             <body>
                 <script>
-                    // You might want to pass some data from the query string or session storage
-                    // For example, const data = { token: '${req.query.token}' };
-                    // const data = req;
-                    console.log(JSON.strigify(req));
+                    const samlResponse = '${samlResponse}'; // Pass the server-side data to client-side
+                    
+                    // Construct the data to be sent in the POST request
+                    const data = {
+                        SAMLResponse: samlResponse
+                        // Add other data if needed
+                    };
 
                     fetch('/login/callback', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            // Include any necessary headers
+                            // Include any other necessary headers
                         },
-                        body: JSON.stringify({ /* Data if needed */ })
+                        body: JSON.stringify(data)
                     })
                     .then(response => {
                         if (response.redirected) {
@@ -85,6 +90,7 @@ app.get('/login/callback', (req, res) => {
         </html>
     `);
 });
+
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
     if (req.user && req.user.jwtToken) {
