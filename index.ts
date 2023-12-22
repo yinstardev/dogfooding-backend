@@ -55,50 +55,50 @@ app.get('/',(req,res) => {
 app.get('/login', passport.authenticate('saml', config.saml.options), (req, res) => {
     return res.redirect(`${fe_url}/dashboard`);
 });
-app.get('/login/callback', (req, res) => {
-    // Extract the SAMLResponse query parameter
-    const samlResponse = req.query.SAMLResponse; // Adjust according to what data you expect
-
-    res.send(`
-        <html>
-            <body>
-                <script>
-                    const samlResponse = '${samlResponse}'; // Pass the server-side data to client-side
+// app.get('/login/callback', (req, res) => {
+//     // Extract the SAMLResponse query parameter
+//     const samlResponse = req.query.SAMLResponse; // Adjust according to what data you expect
+//     const data = req;
+//     res.send(`
+//         <html>
+//             <body>
+//                 <script>
+//                     const samlResponse = '${samlResponse}'; 
                     
-                    // Construct the data to be sent in the POST request
-                    const data = {
-                        SAMLResponse: samlResponse
-                        // Add other data if needed
-                    };
-                    console.log(data);
+//                     // Construct the data to be sent in the POST request
+//                     const data = {
+//                         SAMLResponse: samlResponse
+//                         // Add other data if needed
+//                     };
+//                     console.log(data);
 
-                    fetch('/login/callback', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            // Include any other necessary headers
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => {
-                        if (response.redirected) {
-                            window.location.href = response.url;
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                </script>
-            </body>
-        </html>
-    `);
-});
+//                     fetch('/login/callback', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/json',
+//                             // Include any other necessary headers
+//                         },
+//                         body: JSON.stringify(data)
+//                     })
+//                     .then(response => {
+//                         if (response.redirected) {
+//                             window.location.href = response.url;
+//                         }
+//                     })
+//                     .catch(error => console.error('Error:', error));
+//                 </script>
+//             </body>
+//         </html>
+//     `);
+// });
 
 
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-    if (req.user && req.user.jwtToken) {
+    // if (req.user && req.user.jwtToken) {
         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
-    }else{
-        res.json({"Hi THere : something went wrong": "Check routes"})
-    }
+    // }else{
+    //     res.json({"Hi THere : something went wrong": "Check routes"})
+    // }
 });
 
 app.get('/whoami', (req, res, next) => {
