@@ -63,8 +63,8 @@ app.get('/login/callback', (req, res) => {
                 <script>
                     // You might want to pass some data from the query string or session storage
                     // For example, const data = { token: '${req.query.token}' };
-                    const data = req.data;
-                    console.log(data);
+                    // const data = req;
+                    console.log(JSON.strigify(req));
 
                     fetch('/login/callback', {
                         method: 'POST',
