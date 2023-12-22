@@ -56,6 +56,36 @@ app.get('/login', passport.authenticate('saml', config.saml.options), (req, res)
     return res.redirect(`${fe_url}/dashboard`);
 });
 
+app.get('/login/callback', (req, res) => {
+    res.send(`
+        <html>
+            <body>
+                <script>
+                    // You might want to pass some data from the query string or session storage
+                    // For example, const data = { token: '${req.query.token}' };
+                    const data = req.data;
+                    console.log(data);
+
+                    fetch('/login/callback', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // Include any necessary headers
+                        },
+                        body: JSON.stringify({ /* Data if needed */ })
+                    })
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                </script>
+            </body>
+        </html>
+    `);
+});
+
 app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
     if (req.user && req.user.jwtToken) {
         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
@@ -88,7 +118,6 @@ app.post('/getauthtoken',async (req, res:any) => {
 });
 
 app.post('/checkbhai',async(req,res) => {
-    console.log("ye to bekar hai");
     
     res.status(200).json({"bhai":"kaisa hai"})
 })
