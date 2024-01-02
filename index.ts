@@ -26,15 +26,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// app.use(session(config.session));
 app.use(passport.initialize());
-// app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-    // res.header('Access-Control-Allow-Origin', "*");
-    // res.header('Access-Control-Allow-Origin', 'https://example.com');
     const allowedOrigins = ['https://dog-fooding-application-git-backend-testing-for-api-yinstardev.vercel.app'];
     const origin = req.headers.origin || 'http://localhost:3000';
     
@@ -63,52 +59,9 @@ app.get('/',(req,res) => {
 app.get('/login', passport.authenticate('saml', config.saml.options), (req, res) => {
     return res.redirect(`${fe_url}/dashboard`);
 });
-// app.get('/login/callback', (req, res) => {
-//     // Extract the SAMLResponse query parameter
-//     const samlResponse = req.query.SAMLResponse; // Adjust according to what data you expect
-//     const data = req;
-//     res.send(`
-//         <html>
-//             <body>
-//                 <script>
-//                     const samlResponse = '${samlResponse}'; 
-                    
-//                     // Construct the data to be sent in the POST request
-//                     const data = {
-//                         SAMLResponse: samlResponse
-//                         // Add other data if needed
-//                     };
-//                     console.log(data);
-
-//                     fetch('/login/callback', {
-//                         method: 'POST',
-//                         headers: {
-//                             'Content-Type': 'application/json',
-//                             // Include any other necessary headers
-//                         },
-//                         body: JSON.stringify(data)
-//                     })
-//                     .then(response => {
-//                         if (response.redirected) {
-//                             window.location.href = response.url;
-//                         }
-//                     })
-//                     .catch(error => console.error('Error:', error));
-//                 </script>
-//             </body>
-//         </html>
-//     `);
-// });
 
 
-// app.post('/login/callback', passport.authenticate('saml', config.saml.options), (req:any, res, next) => {
-//     // if (req.user && req.user.jwtToken) {
-//         res.redirect(`${fe_url}/token-handler?token=${req.user.jwtToken}`);
 
-//     // }else{
-//     //     res.json({"Hi THere : something went wrong": "Check routes"})
-//     // }
-// });
 app.post('/login/callback', 
     passport.authenticate('saml', { session: false }), 
     (req: any, res) => {
@@ -133,19 +86,7 @@ app.get('/healthcheck', (req, res, next) => {
     return res.status(200).json({ messgae: 'Server is runngggging!' });
 });
 
-// app.post('/getauthtoken',async (req, res:any) => {
 
-//         const postData = `secret_key=${process.env.SECRET_KEY}&username=${process.env.EMAIL}.com&access_level=FULL`;
-//         const response = await axios.post(`${process.env.BASE_URL}`, postData, {
-//             headers: {
-//                 'Content-Type': 'application/x-www-form-urlencoded',
-//                 'Accept': 'text/plain'
-//             }
-//         });
-
-//         res.status(200).json(response.data);
-
-// });
 
 app.post('/getauthtoken', async (req, res) => {
     const { username } = req.body;  // Extract username from request body
@@ -169,11 +110,6 @@ app.post('/getauthtoken', async (req, res) => {
     }
 });
 
-
-app.post('/checkbhai',async(req,res) => {
-    
-    res.status(200).json({"bhai":"kaisa hai"})
-})
 
 const jwt_secret = process.env.JWT_SECRET || '';
 
